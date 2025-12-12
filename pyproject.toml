@@ -1,0 +1,39 @@
+[project]
+name = "dopy"
+version = "0.1.0"
+description = "Do Python! a python-based task runner"
+readme = "README.md"
+requires-python = "==3.13.*"
+dependencies = [
+    "rich>=14.2.0",
+    "typer>=0.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "hatch>=1.16.2",
+    "pre-commit>=4.5.0",
+    "pyright>=1.1.407",
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.8",
+]
+
+[project.scripts]
+dopy = "dopy.app:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "pyproject.toml"
+source = "git"
+
+[tool.coverage.report]
+omit = [
+    "dopy/__main__.py",
+    "dopy/__init__.py"
+]
+show_missing = true
+fail_under = 80

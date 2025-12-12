@@ -1,0 +1,13 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: Ruff formatter via uv
+        entry: uv run ruff format jml
+        language: system
+        files: ^dopy/.*\.py$
+      - id: ruff-lint
+        name: Ruff formatter via uv
+        entry: uv run ruff check jml --fix
+        language: system
+        files: ^dopy/.*\.py$
