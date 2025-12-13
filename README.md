@@ -1,6 +1,6 @@
 DoPy — Do Python! (task runner)
 ================================
-[![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/release/python-3130/)
+[![Python >=3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3130/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Overview
@@ -29,10 +29,10 @@ For development, install in editable mode from the repository root:
 python3 -m pip install -e .
 ```
 
-For usage, install the whl file via pip
+For usage, install the whl file via pip from release
 
-> You avoid the only pipx installation because if you want to use it,
-> you need to import the dopy module 
+> Note: pipx is not recommended for now because DoPy expects to be importable
+> as a Python module in user code.
 
 Basic usage
 -----------

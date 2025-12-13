@@ -11,9 +11,8 @@ permissions:
 
 jobs:
   release:
-    name: Build and release distributions
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -26,10 +25,10 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install project dependencies
+      - name: Install dependencies
         run: uv sync
-      
-      - name: Determine version
+
+      - name: Show version (from git tag)
         run: uv run hatch version
 
       - name: Build wheel + sdist

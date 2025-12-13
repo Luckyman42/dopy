@@ -3,7 +3,14 @@ name = "dopy"
 version = "0.2.0"
 description = "Do Python! a python-based task runner"
 readme = "README.md"
-requires-python = "==3.13.*"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Árpád Szabó" }
+]
+
+keywords = ["task-runner", "cli", "automation", "makefile"]
+
 dependencies = [
     "rich>=14.2.0",
     "typer>=0.20.0",
@@ -17,6 +24,7 @@ dev = [
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
     "ruff>=0.14.8",
+    "twine>=6.2.0",
 ]
 
 [project.scripts]
