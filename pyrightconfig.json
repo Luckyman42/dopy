@@ -1,0 +1,28 @@
+{
+  "include": ["dopy"],
+  "exclude": [
+    "test/",
+    "migrations",
+    "**/venv",
+    "**/.venv",
+    "**/__pycache__"
+  ],
+
+  "pythonVersion": "3.13",
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "executionEnvironments": [
+    {
+      "root": "dopy",
+      "pythonVersion": "3.13",
+      "extraPaths": ["dopy"]
+    }
+  ],
+
+  "analysis": {
+    "useLibraryCodeForTypes": true,
+    "autoSearchPaths": true,
+    "diagnosticMode": "workspace",
+    "logLevel": "error"
+  }
+}

@@ -29,8 +29,10 @@ For development, install in editable mode from the repository root:
 python3 -m pip install -e .
 ```
 
-For usage, install the whl file via pip or pipx
+For usage, install the whl file via pip
 
+> You avoid the only pipx installation because if you want to use it,
+> you need to import the dopy module 
 
 Basic usage
 -----------
@@ -65,6 +67,12 @@ $ dopy name=pami hello
 > Hello Pami
 $ dopy name=pami hello Lucky 
 > Hello Lucky # positional argument 'Lucky' overrides name from kwargs for that positional parameter
+
+$ dopy 
+# print help for the available commands
+
+$ dopy {command} --help
+# print help for the {command}
 ```
 
 Argument parsing and types

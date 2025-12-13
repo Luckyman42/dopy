@@ -8,20 +8,11 @@ import pathlib
 import datetime
 
 
-def complete_commands(incomplete: str):
-    items = []
-    for name, func in COMMANDS.items():
-        if not name.startswith(incomplete):
-            continue
-        doc = (func.__doc__ or "").strip().split("\n")[0]
-        if not doc:
-            doc = ""
-        completion_item = (name, doc)
-        items.append(completion_item)
-    return items
-
-
 def get_command(name: str):
+    """Return the registered command callable for `name`.
+
+    Raises `CommandNotFoundException` if the name is not registered.
+    """
     comm = COMMANDS.get(name)
     if comm is None:
         raise CommandNotFoundException(f"Command '{name}' not found.")
@@ -29,6 +20,11 @@ def get_command(name: str):
 
 
 def execute_command(attr: Callable, *args, **kwargs) -> None:
+    """Execute `attr` with provided args/kwargs, wrapping TypeError.
+
+    A `TypeError` (wrong arguments) is mapped to
+    `InvalidCommandArgumentsException` to provide a clearer API-level error.
+    """
     try:
         attr(*args, **kwargs)
     except TypeError as e:
@@ -36,6 +32,12 @@ def execute_command(attr: Callable, *args, **kwargs) -> None:
 
 
 def split_commands(args) -> list[tuple[str, list[str]]]:
+    """Split a flat list of positional tokens into (command, params).
+
+    Consecutive tokens that match registered command names start new
+    command groups. Raises `CommandNotFoundException` if the input starts
+    with a non-command token.
+    """
     result = []
     current_cmd = None
     current_params: list[str] = []
@@ -55,6 +57,10 @@ def split_commands(args) -> list[tuple[str, list[str]]]:
 
 
 def _convert_value(value: str, annotation):
+    """Convert the string `value` to the given `annotation` type when
+    possible. If conversion cannot be performed, return the original
+    `value` string.
+    """
     if annotation is inspect._empty:
         return value
     # handle common builtins
@@ -108,7 +114,9 @@ def _convert_value(value: str, annotation):
                     converted.append(el)
             return set(converted) if origin is set else converted
         # For simple types like int, float, str
-        return annotation(value)
+        if annotation in (int, float, str):
+            return annotation(value)
+        return value
     except Exception:
         # If conversion fails, return the original string
         return value
@@ -155,6 +163,12 @@ def resolve_arguments(
 
 
 def parse_args(args: list[str]):
+    """Parse a flat list of tokens into a list of command invocations.
+
+    Returns a list of tuples `(callable, positional_args, kw_args)` where
+    positional and keyword arguments are converted according to annotations
+    where possible.
+    """
     commands: list[tuple[Callable, list[Any], dict[str, Any]]] = []
     params: list[str] = []
     local_kwargs: dict[str, str] = {}
@@ -164,7 +178,6 @@ def parse_args(args: list[str]):
             local_kwargs[key] = value
         else:
             params.append(arg)
-
     functions = split_commands(params)
     for func_name, func_params in functions:
         func = get_command(func_name)

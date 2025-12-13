@@ -10,13 +10,6 @@ COMMANDS = {}
 
 
 def _make_decorator(factory):
-    """Return a decorator that registers wrapped functions into `COMMANDS`.
-
-    `factory` is a callable that takes the original function and returns
-    the wrapper to be used at runtime. This makes it easy to create new
-    decorators that both wrap behavior and register the result.
-    """
-
     def decorator(func: Callable[P, R]) -> Callable[P, R]:
         wrapper = factory(func)
         COMMANDS[func.__name__] = wrapper
@@ -43,6 +36,8 @@ def dopy_command(factory):
 
 @dopy_command
 def command(func: Callable[P, R]) -> Callable[P, R]:
+    """Basic command decorator that registers the function as a command."""
+
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         return func(*args, **kwargs)
@@ -51,11 +46,18 @@ def command(func: Callable[P, R]) -> Callable[P, R]:
 
 
 @dopy_command
-def sh(func: Callable[P, R]) -> Callable[P, R]:
+def sh(func: Callable[P, str]) -> Callable[P, str]:
+    """Execute the returned string as a shell command.
+
+    The wrapped function should return a shell command string. The
+    wrapper runs it via `os.system` and raises `RuntimeError` if the
+    command exits with a non-zero status.
+    """
+
     @wraps(func)
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
-        command = func(*args, **kwargs)
-        if os.system(command) > 0:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> str:
+        command: str = func(*args, **kwargs)
+        if os.system(str(command)) > 0:
             raise RuntimeError(f"Shell command failed: {command}")
         return command
 
@@ -64,6 +66,12 @@ def sh(func: Callable[P, R]) -> Callable[P, R]:
 
 @dopy_command
 def echo(func: Callable[P, R]) -> Callable[P, R]:
+    """Decorator that prints the wrapped function's result to stdout.
+
+    Useful for simple CLI helpers that should both display and return
+    their result.
+    """
+
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         result = func(*args, **kwargs)

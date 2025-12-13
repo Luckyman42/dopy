@@ -47,7 +47,7 @@ def test_resolve_arguments_positional_overrides_kwargs():
 def test_parse_args_integration_and_registration():
     # create a temporary command and register it via decorator
     @command
-    def testcmd(name: str, extra: list[str] = None):
+    def testcmd(name: str, extra: list[str]|None = None):
         return None
 
     try:
@@ -62,28 +62,6 @@ def test_parse_args_integration_and_registration():
     finally:
         # cleanup registration
         COMMANDS.pop("testcmd", None)
-
-
-
-
-def test_complete_commands_and_get_command():
-    # register a dummy function
-    COMMANDS.pop("_c1", None)
-
-    @command
-    def _c1():
-        """My doc line"""
-        return None
-
-    items = cu.complete_commands("_c")
-    assert any(name == "_c1" and "My doc line" in doc for name, doc in items)
-
-    # get_command raises for unknown
-    with pytest.raises(CommandNotFoundException):
-        cu.get_command("no_such_cmd")
-
-    # cleanup
-    COMMANDS.pop("_c1", None)
 
 
 def test_execute_command_type_error_raises():
