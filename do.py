@@ -38,7 +38,7 @@ def formatter():
     """Run formatter"""
     return "ruff format dopy"
 
-@sh
+@command
 def lint_all(): 
     """Formatter + Linter + type_checker"""
     formatter()

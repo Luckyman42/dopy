@@ -1,6 +1,6 @@
 [project]
 name = "dopy"
-version = "0.1.0"
+version = "0.2.0"
 description = "Do Python! a python-based task runner"
 readme = "README.md"
 requires-python = "==3.13.*"
