@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any
 from collections.abc import Callable
 from dopy.exception import CommandNotFoundException, InvalidCommandArgumentsException
@@ -93,7 +95,7 @@ def _convert_value(value: str, annotation):
                 # if all fail, fall through to generic conversion
         # list/set types (e.g. list[str], set[int], typing.List[str])
         origin = get_origin(annotation)
-        if origin in (list, set):
+        if origin in (list, set, tuple):
             # split by comma into elements (empty string -> empty list)
             if value == "":
                 elements = []
@@ -112,7 +114,11 @@ def _convert_value(value: str, annotation):
                         converted.append(el)
                 else:
                     converted.append(el)
-            return set(converted) if origin is set else converted
+            if origin is set:
+                return set(converted)
+            if origin is tuple:
+                return tuple(converted)
+            return converted
         # For simple types like int, float, str
         if annotation in (int, float, str):
             return annotation(value)

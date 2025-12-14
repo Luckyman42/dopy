@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 import importlib.util
 from dopy.config import DOPY_HOME

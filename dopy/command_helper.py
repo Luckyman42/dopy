@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 from typing import Any
 from collections.abc import Callable
-from dopy.command import COMMANDS
 import inspect
+import platform
+
+from dopy import __version__
+from dopy.command import COMMANDS
 from dopy.command_utils import parse_args
 
 
@@ -78,6 +83,10 @@ def complete_commands(ctx, incomplete: str):
             continue
         if p.name in last_command[2]:
             continue
+        if p.default != p.empty:
+            continue
+        if p.kind in (p.VAR_POSITIONAL, p.VAR_KEYWORD):
+            continue
         params_missing.append(p)
 
     if (
@@ -108,7 +117,12 @@ def print_help(console):
     console.print()
     console.print("[bold]Usage:[/bold]")
     console.print("\tdopy <command> [args...] (Repeat)")
-    console.print("\tAdd ... param=value ... for defining command arguments by name.")
+    console.print("\tAdd param=value for defining command arguments by name.")
+    console.print("\tdopy [cyan]--version[/cyan] to show dopy version")
+    console.print("\tdopy [cyan]--help[/cyan] to show this message")
+    console.print(
+        "\tdopy <command> [cyan]--help[/cyan] to show help for spesific command(s)"
+    )
     console.print()
     console.print("[bold]Available commands:[/bold]")
     commands = all_commands_for_help("")
@@ -142,3 +156,14 @@ def print_commands_help(commands, console):
         print_command_help(command, console)
         print("----------------------")
     return
+
+
+def print_version(console):
+    console.print(
+        "Running DoPy {version} with {py_implementation} {py_version} on {system}".format(  # noqa: UP032
+            version=__version__,
+            py_implementation=platform.python_implementation(),
+            py_version=platform.python_version(),
+            system=platform.system(),
+        )
+    )
