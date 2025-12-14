@@ -1,7 +1,6 @@
 import os
 import importlib.util
-
-DOPY_HOME = os.getenv("DOPY_HOME", f"{os.getenv('HOME')}/.dopy")
+from dopy.config import DOPY_HOME
 
 
 def _load_module_from_path(path: str, module_name: str) -> None:
